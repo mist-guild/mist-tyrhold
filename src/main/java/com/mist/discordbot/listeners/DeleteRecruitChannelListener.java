@@ -1,7 +1,6 @@
 package com.mist.discordbot.listeners;
 
 import com.mist.discordbot.Services.MessagingService;
-import org.javacord.api.entity.channel.Channel;
 import org.javacord.api.entity.channel.ServerTextChannel;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;

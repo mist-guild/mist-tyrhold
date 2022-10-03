@@ -1,14 +1,15 @@
 package com.mist.discordbot.listeners;
 
 import com.mist.discordbot.Services.MessagingService;
-import org.javacord.api.entity.channel.*;
-import org.javacord.api.entity.message.Message;
+import org.javacord.api.entity.channel.ChannelCategory;
+import org.javacord.api.entity.channel.ServerChannel;
+import org.javacord.api.entity.channel.ServerTextChannel;
+import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.swing.text.html.Option;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;

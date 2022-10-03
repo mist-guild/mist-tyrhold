@@ -8,7 +8,6 @@ import org.javacord.api.entity.message.MessageBuilder;
 import org.javacord.api.entity.message.embed.EmbedBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.awt.*;
 import java.util.concurrent.CompletableFuture;

@@ -17,40 +17,37 @@ import org.springframework.core.env.Environment;
 @SpringBootApplication
 public class DiscordBotApplication {
 
-	private static final String DISCORD_LOGIN_TOKEN = System.getenv("DISCORD_TOKEN");
+    private static final String DISCORD_LOGIN_TOKEN = System.getenv("DISCORD_TOKEN");
+    @Autowired
+    RecruitWebhookListener recruitWebhookListener;
+    @Autowired
+    CreateRecruitChannelListener createRecruitChannelListener;
+    @Autowired
+    DeleteListener deleteListener;
+    @Autowired
+    DeleteRecruitChannelListener deleteRecruitChannelListener;
+    @Autowired
+    private Environment env;
 
-	@Autowired
-	private Environment env;
+    public static void main(String[] args) {
+        SpringApplication.run(DiscordBotApplication.class, args);
+    }
 
-	@Autowired
-	RecruitWebhookListener recruitWebhookListener;
-	@Autowired
-	CreateRecruitChannelListener createRecruitChannelListener;
-	@Autowired
-	DeleteListener deleteListener;
-	@Autowired
-	DeleteRecruitChannelListener deleteRecruitChannelListener;
+    @Bean
+    @ConfigurationProperties(value = "discord-api")
+    public DiscordApi discordApi() {
+        //String token = env.getProperty("TOKEN");
+        DiscordApi api = new DiscordApiBuilder().setToken(DISCORD_LOGIN_TOKEN)
+                .setAllNonPrivilegedIntents()
+                .login()
+                .join();
 
+        api.addListener(recruitWebhookListener);
+        api.addListener(createRecruitChannelListener);
+        api.addListener(deleteListener);
+        api.addListener(deleteRecruitChannelListener);
 
-	public static void main(String[] args) {
-		SpringApplication.run(DiscordBotApplication.class, args);
-	}
-
-	@Bean
-	@ConfigurationProperties(value = "discord-api")
-	public DiscordApi discordApi() {
-		//String token = env.getProperty("TOKEN");
-		DiscordApi api = new DiscordApiBuilder().setToken(DISCORD_LOGIN_TOKEN)
-				.setAllNonPrivilegedIntents()
-				.login()
-				.join();
-
-		api.addListener(recruitWebhookListener);
-		api.addListener(createRecruitChannelListener);
-		api.addListener(deleteListener);
-		api.addListener(deleteRecruitChannelListener);
-
-		return api;
-	}
+        return api;
+    }
 
 }
