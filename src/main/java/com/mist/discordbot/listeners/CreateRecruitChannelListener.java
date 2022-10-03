@@ -25,6 +25,15 @@ public class CreateRecruitChannelListener implements MessageCreateListener {
         if (channelId.equals(1026048915688140800L) && message.startsWith("!trial")) {
             String[] split = message.split(" ");
             if (split.length != 3) {
+                messagingService.sendMessage(
+                        null,
+                        null,
+                        "Please ensure your command follows this skeleton: !trial id name",
+                        "This message will delete itself in 1 minute. 💣",
+                        null,
+                        messageCreateEvent.getChannel(),
+                        true
+                );
                 return;
             }
 
