@@ -10,7 +10,7 @@ public class DeleteListener implements ReactionAddListener {
 
     @Override
     public void onReactionAdd(ReactionAddEvent reactionAddEvent) {
-        if(reactionAddEvent.getEmoji().equalsEmoji("\uD83D\uDC4E")) {
+        if (reactionAddEvent.getEmoji().equalsEmoji("\uD83D\uDC4E")) {
             reactionAddEvent.deleteMessage();
         }
     }
