@@ -1,6 +1,8 @@
 package com.mist.discordbot;
 
 import com.mist.discordbot.listeners.CreateRecruitChannelListener;
+import com.mist.discordbot.listeners.DeleteListener;
+import com.mist.discordbot.listeners.DeleteRecruitChannelListener;
 import com.mist.discordbot.listeners.RecruitWebhookListener;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -24,6 +26,10 @@ public class DiscordBotApplication {
 	RecruitWebhookListener recruitWebhookListener;
 	@Autowired
 	CreateRecruitChannelListener createRecruitChannelListener;
+	@Autowired
+	DeleteListener deleteListener;
+	@Autowired
+	DeleteRecruitChannelListener deleteRecruitChannelListener;
 
 
 	public static void main(String[] args) {
@@ -33,7 +39,6 @@ public class DiscordBotApplication {
 	@Bean
 	@ConfigurationProperties(value = "discord-api")
 	public DiscordApi discordApi() {
-		System.out.println(DISCORD_LOGIN_TOKEN);
 		//String token = env.getProperty("TOKEN");
 		DiscordApi api = new DiscordApiBuilder().setToken(DISCORD_LOGIN_TOKEN)
 				.setAllNonPrivilegedIntents()
@@ -42,6 +47,8 @@ public class DiscordBotApplication {
 
 		api.addMessageCreateListener(recruitWebhookListener);
 		api.addMessageCreateListener(createRecruitChannelListener);
+		api.addReactionAddListener(deleteListener);
+		api.addMessageCreateListener(deleteRecruitChannelListener);
 
 		return api;
 	}
