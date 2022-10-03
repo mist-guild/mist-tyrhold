@@ -24,7 +24,9 @@ public class CreateRecruitChannelListener implements MessageCreateListener {
 
         if (channelId.equals(1026048915688140800L) && message.startsWith("!trial")) {
             String[] split = message.split(" ");
-            if (split.length != 3) return;
+            if (split.length != 3) {
+                return;
+            }
 
             String id = split[1];
             String name = split[2];
