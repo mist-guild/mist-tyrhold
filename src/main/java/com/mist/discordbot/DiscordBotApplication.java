@@ -45,10 +45,10 @@ public class DiscordBotApplication {
 				.login()
 				.join();
 
-		api.addMessageCreateListener(recruitWebhookListener);
-		api.addMessageCreateListener(createRecruitChannelListener);
-		api.addReactionAddListener(deleteListener);
-		api.addMessageCreateListener(deleteRecruitChannelListener);
+		api.addListener(recruitWebhookListener);
+		api.addListener(createRecruitChannelListener);
+		api.addListener(deleteListener);
+		api.addListener(deleteRecruitChannelListener);
 
 		return api;
 	}

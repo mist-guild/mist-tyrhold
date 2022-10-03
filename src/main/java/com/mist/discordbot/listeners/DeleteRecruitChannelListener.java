@@ -22,9 +22,10 @@ public class DeleteRecruitChannelListener implements MessageCreateListener {
         if (message.equals("!endtrial")) {
             if (channel.getName().matches("\\d+-trial-.+")) {
                 channel.delete();
+                return;
             }
             messagingService.sendMessage(
-                    null,
+                    messageCreateEvent.getMessageAuthor(),
                     null,
                     "Please ensure you execute !endtrial in a trial channel! It should follow this naming pattern: id-trial-name.",
                     "This message will delete itself in 1 minute. 💣",

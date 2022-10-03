@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 
 import javax.swing.text.html.Option;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Component
 public class CreateRecruitChannelListener implements MessageCreateListener {
@@ -26,7 +28,7 @@ public class CreateRecruitChannelListener implements MessageCreateListener {
             String[] split = message.split(" ");
             if (split.length != 3) {
                 messagingService.sendMessage(
-                        null,
+                        messageCreateEvent.getMessageAuthor(),
                         null,
                         "Please ensure your command follows this skeleton: !trial id name",
                         "This message will delete itself in 1 minute. 💣",
@@ -44,12 +46,33 @@ public class CreateRecruitChannelListener implements MessageCreateListener {
                     .get()
                     .getChannelCategoryById("992720873528246294");
             if (category.isPresent()) {
-                messageCreateEvent.getServer()
+                CompletableFuture<ServerTextChannel> newChannel = messageCreateEvent.getServer()
                         .get()
                         .createTextChannelBuilder()
                         .setName(String.format("%s-trial-%s", id, name))
                         .setCategory(category.get())
                         .create();
+
+                try {
+                    Long newChannelId = newChannel.get().getId();
+                    Optional<ServerChannel> newChannelInstance = messageCreateEvent.getServer()
+                            .get()
+                            .getChannelById(newChannelId);
+
+                    messagingService.sendMessage(
+                            messageCreateEvent.getMessageAuthor(),
+                            null,
+                            "Please ensure your command follows this skeleton: !trial id name",
+                            "This message will delete itself in 1 minute. 💣",
+                            null,
+                            (TextChannel) newChannelInstance.get(),
+                            true
+                    );
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
