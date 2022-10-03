@@ -1,5 +1,6 @@
 package com.mist.discordbot;
 
+import com.mist.discordbot.listeners.CreateRecruitChannelListener;
 import com.mist.discordbot.listeners.RecruitWebhookListener;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
@@ -21,6 +22,8 @@ public class DiscordBotApplication {
 
 	@Autowired
 	RecruitWebhookListener recruitWebhookListener;
+	@Autowired
+	CreateRecruitChannelListener createRecruitChannelListener;
 
 
 	public static void main(String[] args) {
@@ -38,6 +41,7 @@ public class DiscordBotApplication {
 				.join();
 
 		api.addMessageCreateListener(recruitWebhookListener);
+		api.addMessageCreateListener(createRecruitChannelListener);
 
 		return api;
 	}
