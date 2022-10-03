@@ -23,8 +23,6 @@ public class DiscordBotApplication {
 
 	@Autowired
 	private Environment env;
-	@Autowired
-	private MessagingService messagingService;
 
 
 	public static void main(String[] args) {
