@@ -14,7 +14,8 @@ import org.springframework.core.env.Environment;
 @SpringBootApplication
 public class DiscordBotApplication {
 
-    private static final String DISCORD_LOGIN_TOKEN = System.getenv("DISCORD_TOKEN");
+    // for testing -> private static final String DISCORD_LOGIN_TOKEN = System.getenv("DISCORD_TOKEN");
+
     @Autowired
     RecruitWebhookListener recruitWebhookListener;
     @Autowired
@@ -35,8 +36,8 @@ public class DiscordBotApplication {
     @Bean
     @ConfigurationProperties(value = "discord-api")
     public DiscordApi discordApi() {
-        //String token = env.getProperty("TOKEN");
-        DiscordApi api = new DiscordApiBuilder().setToken(DISCORD_LOGIN_TOKEN)
+        String token = env.getProperty("TOKEN");
+        DiscordApi api = new DiscordApiBuilder().setToken(token)
                 .setAllNonPrivilegedIntents()
                 .login()
                 .join();
