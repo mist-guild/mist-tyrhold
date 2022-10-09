@@ -1,9 +1,6 @@
 package com.mist.discordbot;
 
-import com.mist.discordbot.listeners.CreateRecruitChannelListener;
-import com.mist.discordbot.listeners.DeleteListener;
-import com.mist.discordbot.listeners.DeleteRecruitChannelListener;
-import com.mist.discordbot.listeners.RecruitWebhookListener;
+import com.mist.discordbot.listeners.*;
 import org.javacord.api.DiscordApi;
 import org.javacord.api.DiscordApiBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +24,8 @@ public class DiscordBotApplication {
     @Autowired
     DeleteRecruitChannelListener deleteRecruitChannelListener;
     @Autowired
+    TrialChannelCreationListener trialChannelCreationListener;
+    @Autowired
     private Environment env;
 
     public static void main(String[] args) {
@@ -46,6 +45,7 @@ public class DiscordBotApplication {
         api.addListener(createRecruitChannelListener);
         api.addListener(deleteListener);
         api.addListener(deleteRecruitChannelListener);
+        api.addListener(trialChannelCreationListener);
 
         return api;
     }

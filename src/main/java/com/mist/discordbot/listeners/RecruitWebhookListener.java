@@ -14,11 +14,16 @@ public class RecruitWebhookListener implements MessageCreateListener {
 
     @Override
     public void onMessageCreate(MessageCreateEvent messageCreateEvent) {
-        Long id = messageCreateEvent.getMessageAuthor().getId();
-        if (id.equals(1026049033439023155L)) {
-            messageCreateEvent.getMessage().addReaction("\uD83D\uDC4D");
-            messageCreateEvent.getMessage().addReaction("\uD83D\uDC4E");
-            messageCreateEvent.getMessage().addReaction("\uD83D\uDDE3");
+        try {
+            Long id = messageCreateEvent.getMessageAuthor().getId();
+            if (id.equals(1026049033439023155L)) {
+                messageCreateEvent.getMessage().addReaction("\uD83D\uDC4D");
+                messageCreateEvent.getMessage().addReaction("\uD83D\uDC4E");
+                messageCreateEvent.getMessage().addReaction("\uD83D\uDDE3");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
+
     }
 }

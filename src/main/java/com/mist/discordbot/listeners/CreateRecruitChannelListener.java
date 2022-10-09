@@ -2,9 +2,7 @@ package com.mist.discordbot.listeners;
 
 import com.mist.discordbot.Services.MessagingService;
 import org.javacord.api.entity.channel.ChannelCategory;
-import org.javacord.api.entity.channel.ServerChannel;
 import org.javacord.api.entity.channel.ServerTextChannel;
-import org.javacord.api.entity.channel.TextChannel;
 import org.javacord.api.event.message.MessageCreateEvent;
 import org.javacord.api.listener.message.MessageCreateListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @Component
 public class CreateRecruitChannelListener implements MessageCreateListener {
@@ -53,28 +50,7 @@ public class CreateRecruitChannelListener implements MessageCreateListener {
                         .setName(String.format("%s-trial-%s", id, name))
                         .setCategory(category.get())
                         .create();
-
-                try {
-                    Long newChannelId = newChannel.get().getId();
-                    Optional<ServerChannel> newChannelInstance = messageCreateEvent.getServer()
-                            .get()
-                            .getChannelById(newChannelId);
-
-                    messagingService.sendMessage(
-                            messageCreateEvent.getMessageAuthor(),
-                            null,
-                            "Please ensure your command follows this skeleton: !trial id name",
-                            "This message will delete itself in 1 minute. 💣",
-                            null,
-                            (TextChannel) newChannelInstance.get(),
-                            true
-                    );
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
                 }
-            }
         }
     }
 }
