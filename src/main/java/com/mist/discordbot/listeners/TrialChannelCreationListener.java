@@ -24,7 +24,7 @@ public class TrialChannelCreationListener implements ServerChannelCreateListener
             String name = channelName.split("-")[2];
             messagingService.sendMessage(
                     "Application for " + name,
-                    env.getProperty("URL") + id,
+                    env.getProperty("URL") + "/" + id,
                     String.format("Click on the title to re-review the application. Good luck to %s on their trial!", name),
                     null,
                     null,
