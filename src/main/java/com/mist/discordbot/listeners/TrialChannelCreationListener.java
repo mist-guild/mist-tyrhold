@@ -21,7 +21,7 @@ public class TrialChannelCreationListener implements ServerChannelCreateListener
             String name = channelName.split("-")[2];
             messagingService.sendMessage(
                     "Application for " + name,
-                    "http://127.0.0.1:5000/applicant/" + id,
+                    "https://mistguild.pythonanywhere.com/applicant" + id,
                     String.format("Click on the title to re-review the application. Good luck to %s on their trial!", name),
                     null,
                     null,
