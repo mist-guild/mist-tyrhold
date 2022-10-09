@@ -30,6 +30,17 @@ public class MessagingService {
                 .send(textChannel);
     }
 
+    public CompletableFuture<Message> sendMessage(String title, String url, String description, String footer, String thumbnail, TextChannel textChannel) {
+        return new MessageBuilder().setEmbed(new EmbedBuilder()
+                .setTitle(title)
+                .setUrl(url)
+                .setDescription(description)
+                .setFooter(footer)
+                .setThumbnail(thumbnail)
+                .setColor(generateColor()))
+                .send(textChannel);
+    }
+
     public void sendMessage(MessageAuthor author, String title, String description, String footer, String thumbnail, TextChannel textChannel, boolean withDelete) {
         this.sendMessage(author, title, description, footer, thumbnail, textChannel).thenAccept(
                 message -> message.addReactionAddListener(deleteListener)
