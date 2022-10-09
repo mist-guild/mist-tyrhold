@@ -22,21 +22,8 @@ public class CreateRecruitChannelListener implements MessageCreateListener {
         Long channelId = messageCreateEvent.getChannel().getId();
         String message = messageCreateEvent.getMessageContent();
 
-        if (channelId.equals(1026048915688140800L) && message.startsWith("!trial")) {
+        if (channelId.equals(1026048915688140800L) && message.matches("!trial \\d+ [^\\s]+")) {
             String[] split = message.split(" ");
-            if (split.length != 3) {
-                messagingService.sendMessage(
-                        messageCreateEvent.getMessageAuthor(),
-                        null,
-                        "Please ensure your command follows this skeleton: !trial id name",
-                        "This message will delete itself in 1 minute. 💣",
-                        null,
-                        messageCreateEvent.getChannel(),
-                        true
-                );
-                return;
-            }
-
             String id = split[1];
             String name = split[2];
 
@@ -51,6 +38,16 @@ public class CreateRecruitChannelListener implements MessageCreateListener {
                         .setCategory(category.get())
                         .create();
                 }
+        } else if (message.startsWith("!trial")) {
+            messagingService.sendMessage(
+                    messageCreateEvent.getMessageAuthor(),
+                    null,
+                    "Please ensure your command follows this skeleton: !trial id name",
+                    "This message will delete itself in 1 minute. 💣",
+                    null,
+                    messageCreateEvent.getChannel(),
+                    true
+            );
         }
     }
 }
