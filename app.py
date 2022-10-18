@@ -1,21 +1,23 @@
 import os
+import discord
+import asyncio
 from discord.ext import commands
 
-def main():
-    client = commands.Bot(command_prefix="?")
+intents = discord.Intents.all()
+client = commands.Bot(command_prefix="?", intents=intents)
 
-    @client.event
-    async def on_ready():
-        print(f"{client.user.name} has connected to Discord.")
 
-    # load all cogs
-    for folder in os.listdir("modules"):
-        if os.path.exists(os.path.join("modules", folder, "cog.py")):
-            client.load_extension(f"modules.{folder}.cog")
+async def load_extensions():
+    for file in os.listdir("modules"):
+        if os.path.exists(os.path.join("modules", file, "cog.py")):
+            # cut off the .py from the file name
+            await client.load_extension(f"modules.{file}.cog")
 
-    with open("token.txt", "r") as f:
-        token = f.read()
-        client.run(token)
-        
-if __name__ == '__main__':
-    main()
+
+async def main():
+    token = open("token.txt", "r").read()
+    async with client:
+        await load_extensions()
+        await client.start(token)
+
+asyncio.run(main())
