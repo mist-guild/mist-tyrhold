@@ -11,6 +11,12 @@ class Ping(commands.Cog, name="Ping"):
     async def ping(self, ctx: commands.Context):
         """Checks for a response from the bot"""
         await ctx.send("Pong")
+    
+    @commands.command("cloudz")
+    async def cloudz(self, ctx: commands.Context):
+        """Tells the truth"""
+        for i in range(0, 5):
+            await ctx.send("cloudz is a retard!!!")
 
 
 async def setup(bot: commands.Bot):
