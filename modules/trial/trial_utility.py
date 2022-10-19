@@ -18,9 +18,9 @@ class TrialUtility:
         embed = discord.Embed()
         embed.description = f"[{name}'s Application](https://mistguild.pythonanywhere.com/applicant/{id})"
         return embed
-    
+
     @staticmethod
-    def get_trial_syntax_error_embed(name: str, id: int):
+    def get_trial_syntax_error_embed():
         embed = discord.Embed()
         embed.description = "Incorrect syntax! Please follow this skeleton: !mb trial <name> <id>"
         return embed
