@@ -1,4 +1,4 @@
-import discord
+import re
 from discord.ext import commands
 from .trial_utility import TrialUtility
 
@@ -14,13 +14,25 @@ class TrialCog(commands.Cog, name="Trial"):
         """Creates a trial channel - args: <name> <id>"""
         # check if command args is valid
         if name is None or id is None:
-            ctx.send(
+            await ctx.send(
                 "Incorrect syntax! Please follow this skeleton: !mb trial <name> <id>")
             return
         
         # get category and create txt channel
         channel_name = TrialUtility.get_trial_channel_name(name, id)
         TrialUtility.create_new_trial_channel(ctx.guild, channel_name)
+    
+    @commands.command("endtrial")
+    async def trial_pass(self, ctx: commands.Context, outcome: str = None):
+        """Deletes a trial text channel - args: (optional) <outcome: pass/fail>"""
+        if re.match('.+-\d+', ctx.channel.name):
+            if outcome.lower() == "pass": 
+                await ctx.send("Congrats to the trial!")
+                # send msg?
+            elif outcome.lower() == "fail":
+                await ctx.send("Sadge.")
+            await ctx.channel.delete()
+            
 
 
 async def setup(bot: commands.Bot):
