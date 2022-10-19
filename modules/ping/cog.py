@@ -18,6 +18,11 @@ class Ping(commands.Cog, name="Ping"):
         for i in range(0, 5):
             await ctx.send("cloudz is a retard!!!")
 
+    @commands.command("enzyte")
+    async def enzyte(self, ctx: commands.Context):
+        """Tells the truth"""
+        for i in range(0, 5):
+            await ctx.send("With Enzyte Everybody Wins!")
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(Ping(bot))

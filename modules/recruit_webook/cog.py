@@ -3,7 +3,7 @@ from discord.ext import commands
 
 class RecruitWebhookCog(commands.Cog, name="Recruit Webhook"):
     """Mist Bot's interaction with the Recruit Webhook"""
-    
+
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
