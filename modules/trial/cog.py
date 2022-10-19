@@ -14,7 +14,7 @@ class TrialCog(commands.Cog, name="Trial"):
     @commands.command("trial")
     async def trial(self, ctx: commands.Context, name: str = None, id: int = None):
         """Creates a trial channel - args: <name> <id>"""
-        if not ctx.channel.id == os.getenv("TRIAL_CHANNEL_ID"):
+        if not ctx.channel.id == int(os.getenv("TRIAL_CHANNEL_ID")):
             return
 
         # check if command args is valid
@@ -29,15 +29,15 @@ class TrialCog(commands.Cog, name="Trial"):
         await message.pin()
 
     @commands.command("endtrial")
-    async def trial_pass(self, ctx: commands.Context, outcome: str = None):
-        """Deletes a trial text channel - args: (optional) <outcome: pass/fail>"""
+    async def endtrial(self, ctx: commands.Context, outcome: str = None):
+        """Deletes a trial text channel - args: <outcome: p/f>"""
         if not re.match('.+-\d+', ctx.channel.name):
             return
 
-        if outcome.lower() == "pass":
+        if outcome.lower() == "p":
             await ctx.send("Congrats to the trial!")
             # send msg?
-        elif outcome.lower() == "fail":
+        elif outcome.lower() == "f":
             await ctx.send("Sadge.")
         await ctx.channel.delete()
 

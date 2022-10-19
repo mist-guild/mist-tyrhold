@@ -10,7 +10,8 @@ class TrialUtility:
 
     @staticmethod
     async def create_new_trial_channel(guild, channel_name):
-        category = discord.utils.get(guild.categories, id=os.getenv('NEW_TRIAL_CATEGORY_ID'))
+        category_id = int(os.getenv('NEW_TRIAL_CATEGORY_ID'))
+        category = discord.utils.get(guild.categories, id=category_id)
         channel = await guild.create_text_channel(name=channel_name, category=category)
         return channel
 
