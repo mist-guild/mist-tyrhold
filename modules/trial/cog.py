@@ -18,8 +18,7 @@ class TrialCog(commands.Cog, name="Trial"):
 
         # check if command args is valid
         if name is None or id is None:
-            await ctx.send(
-                "Incorrect syntax! Please follow this skeleton: !mb trial <name> <id>")
+            await ctx.send(embed=self.util.get_trial_syntax_error_embed())
             return
 
         # get category and create txt channel
