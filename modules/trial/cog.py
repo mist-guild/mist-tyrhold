@@ -1,5 +1,6 @@
 import os
 import re
+from time import sleep
 from discord.ext import commands
 from .trial_utility import TrialUtility
 
@@ -35,10 +36,14 @@ class TrialCog(commands.Cog, name="Trial"):
             return
 
         if outcome.lower() == "p":
+            emojis = ["🥳", "🎉", "🎊", "🎈"]
             await ctx.send("Congrats to the trial!")
-            # send msg?
+            for emoji in emojis:
+                await ctx.send(emoji)
         elif outcome.lower() == "f":
             await ctx.send("Sadge.")
+        await ctx.send("Deleting in 5 seconds...")
+        sleep(5)
         await ctx.channel.delete()
 
 
