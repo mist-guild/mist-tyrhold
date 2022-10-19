@@ -1,7 +1,10 @@
 import os
 import discord
 import asyncio
+from dotenv import load_dotenv
 from discord.ext import commands
+
+load_dotenv()
 
 intents = discord.Intents.all()
 client = commands.Bot(command_prefix="!mb ", intents=intents)
@@ -15,9 +18,8 @@ async def load_extensions():
 
 
 async def main():
-    token = open("token.txt", "r").read()
     async with client:
         await load_extensions()
-        await client.start(token)
+        await client.start(os.getenv("TOKEN"))
 
 asyncio.run(main())

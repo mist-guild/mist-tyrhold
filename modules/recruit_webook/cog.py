@@ -1,3 +1,4 @@
+import os
 from discord.ext import commands
 
 
@@ -12,7 +13,7 @@ class RecruitWebhookCog(commands.Cog, name="Recruit Webhook"):
         if message.author.id == self.bot.user:
             return
 
-        if message.author.id == 1026049033439023155:
+        if message.author.id == os.getenv("WEBHOOK_ID"):
             emojis = ["👍", "👎", "💬"]
             for emoji in emojis:
                 await message.add_reaction(emoji)
