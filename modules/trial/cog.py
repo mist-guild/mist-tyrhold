@@ -11,7 +11,7 @@ class TrialCog(commands.Cog, name="Trial"):
         self.util = TrialUtility
 
     @commands.command("trial")
-    async def trial(self, ctx: commands.Context, name: str, id: int):
+    async def trial(self, ctx: commands.Context, name: str = None, id: int = None):
         """Creates a trial channel - args: <name> <id>"""
         # check if command args is valid
         if name is None or id is None:

@@ -4,7 +4,7 @@ import asyncio
 from discord.ext import commands
 
 intents = discord.Intents.all()
-client = commands.Bot(command_prefix="?", intents=intents)
+client = commands.Bot(command_prefix="!mb ", intents=intents)
 
 
 async def load_extensions():
