@@ -13,6 +13,9 @@ class TrialCog(commands.Cog, name="Trial"):
     @commands.command("trial")
     async def trial(self, ctx: commands.Context, name: str = None, id: int = None):
         """Creates a trial channel - args: <name> <id>"""
+        if not ctx.channel.id == 1026048915688140800:
+            return
+
         # check if command args is valid
         if name is None or id is None:
             await ctx.send(
@@ -28,13 +31,15 @@ class TrialCog(commands.Cog, name="Trial"):
     @commands.command("endtrial")
     async def trial_pass(self, ctx: commands.Context, outcome: str = None):
         """Deletes a trial text channel - args: (optional) <outcome: pass/fail>"""
-        if re.match('.+-\d+', ctx.channel.name):
-            if outcome.lower() == "pass":
-                await ctx.send("Congrats to the trial!")
-                # send msg?
-            elif outcome.lower() == "fail":
-                await ctx.send("Sadge.")
-            await ctx.channel.delete()
+        if not re.match('.+-\d+', ctx.channel.name):
+            return
+
+        if outcome.lower() == "pass":
+            await ctx.send("Congrats to the trial!")
+            # send msg?
+        elif outcome.lower() == "fail":
+            await ctx.send("Sadge.")
+        await ctx.channel.delete()
 
 
 async def setup(bot: commands.Bot):
