@@ -11,7 +11,7 @@ class RecruitWebhookCog(commands.Cog, name="Recruit Webhook"):
     async def on_message(self, message):
         if message.author.id == self.bot.user:
             return
-        
+
         if message.author.id == 1026049033439023155:
             emojis = ["👍", "👎", "💬"]
             for emoji in emojis:

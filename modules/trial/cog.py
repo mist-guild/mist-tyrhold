@@ -18,24 +18,23 @@ class TrialCog(commands.Cog, name="Trial"):
             await ctx.send(
                 "Incorrect syntax! Please follow this skeleton: !mb trial <name> <id>")
             return
-        
+
         # get category and create txt channel
         channel_name = self.util.get_trial_channel_name(name, id)
         channel = await self.util.create_new_trial_channel(ctx.guild, channel_name)
         message = await channel.send(embed=self.util.get_new_trial_embed(name, id))
         await message.pin()
-    
+
     @commands.command("endtrial")
     async def trial_pass(self, ctx: commands.Context, outcome: str = None):
         """Deletes a trial text channel - args: (optional) <outcome: pass/fail>"""
         if re.match('.+-\d+', ctx.channel.name):
-            if outcome.lower() == "pass": 
+            if outcome.lower() == "pass":
                 await ctx.send("Congrats to the trial!")
                 # send msg?
             elif outcome.lower() == "fail":
                 await ctx.send("Sadge.")
             await ctx.channel.delete()
-            
 
 
 async def setup(bot: commands.Bot):
