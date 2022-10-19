@@ -8,6 +8,7 @@ class TrialCog(commands.Cog, name="Trial"):
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
+        self.util = TrialUtility
 
     @commands.command("trial")
     async def trial(self, ctx: commands.Context, name: str, id: int):
@@ -19,8 +20,10 @@ class TrialCog(commands.Cog, name="Trial"):
             return
         
         # get category and create txt channel
-        channel_name = TrialUtility.get_trial_channel_name(name, id)
-        TrialUtility.create_new_trial_channel(ctx.guild, channel_name)
+        channel_name = self.util.get_trial_channel_name(name, id)
+        channel = await self.util.create_new_trial_channel(ctx.guild, channel_name)
+        message = await channel.send(embed=self.util.get_new_trial_embed(name, id))
+        await message.pin()
     
     @commands.command("endtrial")
     async def trial_pass(self, ctx: commands.Context, outcome: str = None):
