@@ -15,7 +15,7 @@ class TrialCog(commands.Cog, name="Trial"):
     @commands.command("trial")
     async def trial(self, ctx: commands.Context, name: str = None, id: int = None):
         """Creates a trial channel - args: <name> <id>"""
-        if not ctx.channel.id == int(os.getenv("TRIAL_CHANNEL_ID")):
+        if not ctx.channel.id == int(os.getenv("CC_APP_CHANNEL")) or not ctx.channel.id == int(os.getenv("WB_APP_CHANNEL")):
             return
 
         # check if command args is valid
