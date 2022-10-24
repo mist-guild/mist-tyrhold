@@ -11,6 +11,8 @@ client = commands.Bot(command_prefix="!mb ", intents=intents)
 
 
 async def load_extensions():
+    # os.listdir("modules") - dev
+    # os.listdir("/home/mistguild/bot/modules") - prod
     for file in os.listdir("modules"):
         if os.path.exists(os.path.join("modules", file, "cog.py")):
             # cut off the .py from the file name
