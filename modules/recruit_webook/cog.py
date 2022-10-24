@@ -13,7 +13,7 @@ class RecruitWebhookCog(commands.Cog, name="Recruit Webhook"):
         if message.author.id == self.bot.user:
             return
 
-        if message.author.id == int(os.getenv("WEBHOOK_ID")):
+        if message.author.id == int(os.getenv("CC_WEBHOOK_ID")) or message.author.id == int(os.getenv("WB_WEBHOOK_ID")):
             emojis = ["👍", "👎", "💬"]
             for emoji in emojis:
                 await message.add_reaction(emoji)

@@ -25,7 +25,7 @@ class TrialCog(commands.Cog, name="Trial"):
 
         # get category and create txt channel
         channel_name = self.util.get_trial_channel_name(name, id)
-        channel = await self.util.create_new_trial_channel(ctx.guild, channel_name)
+        channel = await self.util.create_new_trial_channel(ctx.channel.id, ctx.guild, channel_name)
         message = await channel.send(embed=self.util.get_new_trial_embed(name, id))
         await message.pin()
 

@@ -9,8 +9,11 @@ class TrialUtility:
         return f"{name}-{id}"
 
     @staticmethod
-    async def create_new_trial_channel(guild, channel_name):
-        category_id = int(os.getenv('NEW_TRIAL_CATEGORY_ID'))
+    async def create_new_trial_channel(called_from, guild, channel_name):
+        if called_from == int(os.getenv('WB_APP_CHANNEL')):
+            category_id = int(os.getenv('WB_APP_CATEGORY'))
+        else:
+            category_id = int(os.getenv('CC_APP_CATEGORY'))
         category = discord.utils.get(guild.categories, id=category_id)
         channel = await guild.create_text_channel(name=channel_name, category=category)
         return channel
