@@ -4,6 +4,10 @@ from time import sleep
 from discord.ext import commands
 from .trial_utility import TrialUtility
 
+trial_channels = [
+    int(os.getenv("CC_APP_CHANNEL")),
+    int(os.getenv("WB_APP_CHANNEL"))
+]
 
 class TrialCog(commands.Cog, name="Trial"):
     """Mist Bot's interaction with trials and the trialing process"""
@@ -15,7 +19,10 @@ class TrialCog(commands.Cog, name="Trial"):
     @commands.command("trial")
     async def trial(self, ctx: commands.Context, name: str = None, id: int = None):
         """Creates a trial channel - args: <name> <id>"""
-        if not ctx.channel.id == int(os.getenv("CC_APP_CHANNEL")) or not ctx.channel.id == int(os.getenv("WB_APP_CHANNEL")):
+
+        # If this command is called in an incorrect channel
+        if ctx.channel.id not in trial_channels:
+            # Silently fail with no error message
             return
 
         # check if command args is valid
