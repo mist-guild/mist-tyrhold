@@ -35,10 +35,11 @@ class TrialCog(commands.Cog, name="Trial"):
     async def on_guild_channel_create(self, channel):
         # if channel.category_id != int(os.getenv("RECRUIT_CATEGORY_ID")):
         #     return
-        print("yo")
-        # id = utility.get_applicant_id(channel.name)
-        # applicant = utility.build_applicant_from_id(id)
-        await channel.send("nice")
+
+        id = utility.get_applicant_id(channel.name)
+        applicant = utility.build_applicant_from_id(id)
+        embed = utility.build_applicant_embed(applicant)
+        await channel.send(embed=embed)
 
     @commands.command("endtrial")
     async def endtrial(self, ctx: commands.Context, outcome: str = None):
