@@ -1,4 +1,5 @@
 import os
+from discord import webhook
 from discord.ext import commands
 from . import utility
 
@@ -20,7 +21,8 @@ class RecruitWebhookCog(commands.Cog, name="Recruit Webhook"):
                 embed.author.name, embed.title[20:])
             channel = await utility.create_text_channel(self.bot, channel_name)
             embed.url = channel.jump_url
-            await message.edit(embed=embed)
+            await message.delete()
+            await message.channel.send(embed=embed)
 
 
 async def setup(bot: commands.Bot):
