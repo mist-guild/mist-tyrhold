@@ -2,19 +2,14 @@ import os
 import re
 from time import sleep
 from discord.ext import commands
-from .trial_utility import TrialUtility
+from . import utility
 
-trial_channels = [
-    int(os.getenv("CC_APP_CHANNEL")),
-    int(os.getenv("WB_APP_CHANNEL"))
-]
 
 class TrialCog(commands.Cog, name="Trial"):
     """Mist Bot's interaction with trials and the trialing process"""
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
-        self.util = TrialUtility
 
     @commands.command("trial")
     async def trial(self, ctx: commands.Context, name: str = None, id: int = None):
@@ -35,6 +30,15 @@ class TrialCog(commands.Cog, name="Trial"):
         channel = await self.util.create_new_trial_channel(ctx.channel.id, ctx.guild, channel_name)
         message = await channel.send(embed=self.util.get_new_trial_embed(name, id))
         await message.pin()
+
+    @commands.Cog.listener()
+    async def on_guild_channel_create(self, channel):
+        # if channel.category_id != int(os.getenv("RECRUIT_CATEGORY_ID")):
+        #     return
+        print("yo")
+        # id = utility.get_applicant_id(channel.name)
+        # applicant = utility.build_applicant_from_id(id)
+        await channel.send("nice")
 
     @commands.command("endtrial")
     async def endtrial(self, ctx: commands.Context, outcome: str = None):
