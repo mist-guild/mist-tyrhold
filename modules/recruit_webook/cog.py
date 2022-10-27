@@ -18,7 +18,9 @@ class RecruitWebhookCog(commands.Cog, name="Recruit Webhook"):
             embed = message.embeds[0]
             channel_name = utility.get_channel_name(
                 embed.author.name, embed.title[20:])
-            await utility.create_text_channel(self.bot, channel_name)
+            channel = await utility.create_text_channel(self.bot, channel_name)
+            embed.url = channel.jump_url
+            await message.edit(embed=embed)
 
 
 async def setup(bot: commands.Bot):

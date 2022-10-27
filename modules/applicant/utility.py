@@ -1,5 +1,6 @@
 import os
 import datetime
+import time
 from . import applicant_dto
 import discord
 import requests
@@ -94,10 +95,10 @@ def build_applicant_embed(applicant: applicant_dto.Applicant):
 
 
 def get_time_and_date():
-    today = datetime.date.today()
-    time = today.strftime("%H:%M %p")
-    date = today.strftime("%m/%d/%y")
-    return time, date
+    todayVar = datetime.date.today()
+    timeVar = time.strftime("%I:%M %p")
+    dateVar = todayVar.strftime("%m/%d/%y")
+    return timeVar, dateVar
 
 
 def get_class_color_and_icon(class_name):
