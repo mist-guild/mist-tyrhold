@@ -14,8 +14,7 @@ class RecruitWebhookCog(commands.Cog, name="Recruit Webhook"):
         if message.author.id == self.bot.user:
             return
 
-        # TODO: change this to mist cc webhook id
-        if message.author.id == 1026049033439023155:
+        if message.author.id == int(os.getenv("RECRUIT_WEBHOOK_ID")):
             embed = message.embeds[0]
             channel_name = utility.get_channel_name(
                 embed.author.name, embed.title[20:])

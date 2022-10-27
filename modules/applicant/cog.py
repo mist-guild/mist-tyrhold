@@ -1,6 +1,5 @@
 import os
 import re
-from time import sleep
 from discord.ext import commands
 from . import utility
 

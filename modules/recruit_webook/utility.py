@@ -20,7 +20,7 @@ async def create_text_channel(bot, channel_name):
     guild = bot.get_guild(int(os.getenv("MIST_GUILD_ID")))
     category_id = int(os.getenv("RECRUIT_CATEGORY_ID"))
     category = discord.utils.get(guild.categories, id=category_id)
-    
+
     # create and return channel
     channel = await guild.create_text_channel(name=channel_name, category=category)
     return channel
