@@ -1,3 +1,4 @@
+from ast import parse
 import os
 import discord
 
@@ -6,6 +7,7 @@ def get_channel_name(author_string, team_name):
     # seperate name and id
     author_split = author_string.split("•")
     name = author_split[0].strip()
+    name = parse_chracter_name(name)
     id = author_split[1].strip()
 
     # abbreviate team
@@ -24,3 +26,9 @@ async def create_text_channel(bot, channel_name):
     # create and return channel
     channel = await guild.create_text_channel(name=channel_name, category=category)
     return channel
+
+
+def parse_chracter_name(name):
+    if '-' in name:
+        return name.split("-")[0]
+    return name
