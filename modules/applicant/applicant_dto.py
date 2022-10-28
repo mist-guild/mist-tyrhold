@@ -16,6 +16,9 @@ class Applicant:
         self.team_choice = response["team_choice"]
         self.warcraftlogs_link = response["warcraftlogs_link"]
         self.wow_class = response["wow_class"]
-    
+
+    def __str__(self):
+        return str(self.__class__) + ": " + str(self.__dict__)
+
     def to_json(self):
         return self.wow_class

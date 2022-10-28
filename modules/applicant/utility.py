@@ -4,6 +4,7 @@ import time
 from . import applicant_dto
 import discord
 import requests
+import asyncio
 
 
 def get_applicant_id(channel_name):

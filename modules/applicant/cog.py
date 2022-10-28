@@ -15,11 +15,17 @@ class ApplicantCog(commands.Cog, name="Applicant"):
         if channel.category_id != int(os.getenv("RECRUIT_CATEGORY_ID")):
             return
 
+        # post applicant embed
         id = utility.get_applicant_id(channel.name)
         applicant = utility.build_applicant_from_id(id)
         embed = utility.build_applicant_embed(applicant)
         message = await channel.send(embed=embed)
+
+        # pin and add reactions
         await message.pin()
+        emojis = ["👍", "👎", "💬"]
+        for emoji in emojis:
+            await message.add_reaction(emoji)
 
     @commands.command("end")
     async def end(self, ctx: commands.Context):
