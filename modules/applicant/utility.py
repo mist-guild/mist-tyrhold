@@ -9,7 +9,7 @@ import asyncio
 
 def get_applicant_id(channel_name):
     channel_split = channel_name.split("-")
-    return channel_split[2]
+    return channel_split[len(channel_split) - 1]
 
 
 def build_applicant_from_id(id):
