@@ -4,12 +4,17 @@ import time
 from . import applicant_dto
 import discord
 import requests
-import asyncio
+import base64
+import zlib
 
 
 def get_applicant_id(channel_name):
     channel_split = channel_name.split("-")
     return channel_split[len(channel_split) - 1]
+
+
+def get_category_by_id(guild, category_id):
+    return discord.utils.get(guild.categories, id=category_id)
 
 
 def build_applicant_from_id(id):
@@ -93,6 +98,23 @@ def build_applicant_embed(applicant: applicant_dto.Applicant):
     embed.add_field(name="\u200B", value="\u200B", inline=False)
 
     return embed
+
+
+async def get_archive_comments_string(channel):
+    # loop through all msgs and add to archived_messages
+    archived_messages = ""
+    current_author = None
+    async for message in channel.history(limit=1000):
+        if current_author == None:
+            current_author = message.author
+            archived_messages += f"**{message.author.name}**\n"
+        if current_author != message.author:
+            current_author = message.author
+            archived_messages += f"**{message.author.name}**\n"
+        archived_messages += f"{message.content}\n"
+    
+    # encode, compress, and return string
+    return base64.b64encode(zlib.compress(archived_messages.encode()))
 
 
 def get_time_and_date():
