@@ -69,6 +69,15 @@ class ApplicantCog(commands.Cog, name="Applicant"):
             await new_channel.send(message, suppress_embeds=True)
             asyncio.sleep(5)
 
+    @commands.command("list")
+    async def list(self, ctx: commands.Context):
+        """Lists all applicants and their IDs"""
+        if ctx.channel.category_id != int(os.getenv("RECRUIT_CATEGORY_ID")):
+            return
+
+        embed = utility.get_applicants_embed()
+        await ctx.channel.send(embed=embed)
+
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(ApplicantCog(bot))

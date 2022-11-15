@@ -187,3 +187,15 @@ def get_class_color_and_icon(class_name):
     }
 
     return class_colors[class_name], class_icons[class_name]
+
+
+def get_applicants_embed():
+    applicants = requests.get(os.getenv("APPLICANT_URL") + "all").json()
+    list = ""
+    for key, value in applicants.items():
+        list += f"{key} - {value}\n"
+    print(list)
+
+    embed = discord.Embed(title=f"All Applicants as of {get_time_and_date()[1]}",
+                          description=list)
+    return embed
