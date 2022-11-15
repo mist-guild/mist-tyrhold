@@ -41,7 +41,7 @@ class ApplicantCog(commands.Cog, name="Applicant"):
             id = utility.get_applicant_id(ctx.channel.name)
             archived_comments = await utility.get_archive_comments_string(
                 ctx.channel)
-            requests.put(f"http://127.0.0.1:5000/applicant/archive/{id}",
+            requests.put(os.getenv("APPLICANT_URL") + f"archive/{id}",
                          data=archived_comments,
                          headers={'Content-Type': 'application/octet-stream'})
             await ctx.channel.delete()
