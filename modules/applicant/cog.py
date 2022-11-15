@@ -1,5 +1,6 @@
 import os
 import re
+import asyncio
 from discord.ext import commands
 import requests
 from . import utility
@@ -38,17 +39,29 @@ class ApplicantCog(commands.Cog, name="Applicant"):
             requests.put(f"http://127.0.0.1:5000/applicant/archive/{id}",
                          data=archived_comments,
                          headers={'Content-Type': 'application/octet-stream'})
+            #await ctx.channel.delete()
 
     @commands.command("app")
     async def app(self, ctx: commands.Context, id):
         """Looks up an applicant by ID"""
-        # if ctx.channel.category_id != int(os.getenv("RECRUIT_CATEGORY_ID")):
-        #     return
+        if ctx.channel.category_id != int(os.getenv("RECRUIT_CATEGORY_ID")):
+            return
 
+        # get applicant
         applicant = utility.build_applicant_from_id(id)
+        
+        # create archive channel
+        channel_name = utility.get_archive_channel_name(applicant)
+        new_channel = await utility.create_text_channel(ctx.guild, channel_name)
+        
+        # post application and messaages
         embed = utility.build_applicant_embed(applicant)
-        # post all comments
-        await ctx.channel.send(embed=embed)
+        messages = applicant.decode_archived_comments()
+        messages_split = [messages[i:i+1000] for i in range(0, len(messages), 1000)]
+        await new_channel.send(embed=embed)
+        for message in messages_split:
+            await new_channel.send(message, suppress_embeds=True)
+            asyncio.sleep(5)
 
 
 async def setup(bot: commands.Bot):

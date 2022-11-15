@@ -104,15 +104,18 @@ async def get_archive_comments_string(channel):
     # loop through all msgs and add to archived_messages
     archived_messages = ""
     current_author = None
-    async for message in channel.history(limit=1000):
+    async for message in channel.history(oldest_first=True, limit=None):
+        if message.author.id == int(os.getenv("BOT_ID")):
+            continue
         if current_author == None:
             current_author = message.author
-            archived_messages += f"**{message.author.name}**\n"
+            archived_messages += f"\n**{message.author}**\n"
         if current_author != message.author:
             current_author = message.author
-            archived_messages += f"**{message.author.name}**\n"
+            archived_messages += f"\n**{message.author}**\n"
+        
         archived_messages += f"{message.content}\n"
-    
+
     # encode, compress, and return string
     return base64.b64encode(zlib.compress(archived_messages.encode()))
 
@@ -122,6 +125,22 @@ def get_time_and_date():
     timeVar = time.strftime("%I:%M %p")
     dateVar = todayVar.strftime("%m/%d/%y")
     return timeVar, dateVar
+
+
+async def create_text_channel(guild, channel_name):
+    # get guild and category
+    category_id = int(os.getenv("RECRUIT_CATEGORY_ID"))
+    category = discord.utils.get(guild.categories, id=category_id)
+
+    # create and return channel
+    print("epic")
+    channel = await guild.create_text_channel(name=channel_name, category=category)
+    return channel
+
+
+def get_archive_channel_name(applicant):
+    team_name = "wb" if applicant.team_choice == "Windbridge" else "cc"
+    return f"archive-{applicant.id}-{team_name}"
 
 
 def get_class_color_and_icon(class_name):
