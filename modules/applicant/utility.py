@@ -6,6 +6,7 @@ import discord
 import requests
 import base64
 import zlib
+import json
 
 
 def get_applicant_id(channel_name):
@@ -21,6 +22,15 @@ def build_applicant_from_id(id):
     response = requests.get(os.getenv("APPLICANT_URL") + id)
     applicant = applicant_dto.Applicant(response.json())
     return applicant
+
+
+def check_for_previous_app(applicant: applicant_dto.Applicant):
+    data = {"discord_contact": applicant.discord_contact,
+            "battlenet_contact": applicant.battlenet_contact}
+    response = requests.get(os.getenv("APPLICANT_URL") + "exists",
+                            headers={'content-type': 'application/json'},
+                            data=json.dumps(data))
+    return response.json()
 
 
 def build_applicant_embed(applicant: applicant_dto.Applicant):
@@ -113,7 +123,7 @@ async def get_archive_comments_string(channel):
         if current_author != message.author:
             current_author = message.author
             archived_messages += f"\n**{message.author}**\n"
-        
+
         archived_messages += f"{message.content}\n"
 
     # encode, compress, and return string

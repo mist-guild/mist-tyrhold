@@ -29,6 +29,11 @@ class ApplicantCog(commands.Cog, name="Applicant"):
         for emoji in emojis:
             await message.add_reaction(emoji)
 
+        # check if applicant is already in database
+        previous_apps = utility.check_for_previous_app(applicant)
+        for id in previous_apps:
+            await channel.send(f"**Previous Application detected!** Run `!mb app {id}` to view it.")
+
     @commands.command("end")
     async def end(self, ctx: commands.Context):
         """Deletes an applicant text channel"""
@@ -39,7 +44,7 @@ class ApplicantCog(commands.Cog, name="Applicant"):
             requests.put(f"http://127.0.0.1:5000/applicant/archive/{id}",
                          data=archived_comments,
                          headers={'Content-Type': 'application/octet-stream'})
-            #await ctx.channel.delete()
+            await ctx.channel.delete()
 
     @commands.command("app")
     async def app(self, ctx: commands.Context, id):
@@ -49,15 +54,16 @@ class ApplicantCog(commands.Cog, name="Applicant"):
 
         # get applicant
         applicant = utility.build_applicant_from_id(id)
-        
+
         # create archive channel
         channel_name = utility.get_archive_channel_name(applicant)
         new_channel = await utility.create_text_channel(ctx.guild, channel_name)
-        
+
         # post application and messaages
         embed = utility.build_applicant_embed(applicant)
         messages = applicant.decode_archived_comments()
-        messages_split = [messages[i:i+1000] for i in range(0, len(messages), 1000)]
+        messages_split = [messages[i:i+1000]
+                          for i in range(0, len(messages), 1000)]
         await new_channel.send(embed=embed)
         for message in messages_split:
             await new_channel.send(message, suppress_embeds=True)
