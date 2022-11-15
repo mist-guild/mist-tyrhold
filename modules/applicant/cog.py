@@ -61,13 +61,14 @@ class ApplicantCog(commands.Cog, name="Applicant"):
 
         # post application and messaages
         embed = utility.build_applicant_embed(applicant)
-        messages = applicant.decode_archived_comments()
-        messages_split = [messages[i:i+1000]
-                          for i in range(0, len(messages), 1000)]
         await new_channel.send(embed=embed)
-        for message in messages_split:
-            await new_channel.send(message, suppress_embeds=True)
-            asyncio.sleep(5)
+        if applicant.archived_comments:
+            messages = applicant.decode_archived_comments()
+            messages_split = [messages[i:i+1000]
+                              for i in range(0, len(messages), 1000)]
+            for message in messages_split:
+                await new_channel.send(message, suppress_embeds=True)
+                await asyncio.sleep(2)
 
     @commands.command("list")
     async def list(self, ctx: commands.Context):
