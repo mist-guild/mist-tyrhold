@@ -3,17 +3,14 @@ import discord
 import base64
 import zlib
 import json
+import asyncio
 from apis.valdrakken import Valdrakken
 from modules.dataclasses.applicant import Applicant
 from modules.utility.general_utility import GeneralUtility
 from modules.utility.discord_utility import DiscordUtility
 
 
-def build_applicant_embed(channel_name):
-    # get ID from channel name
-    id = DiscordUtility.get_applicant_id_from_channel_name(channel_name)
-
-    # build applicant from ID
+def get_applicant_and_embed(id):
     applicant = Applicant.build_applicant_from_id(id)
 
     # build embed
@@ -103,10 +100,7 @@ def get_previous_applications(applicant):
     return response.json()
 
 
-async def archive_comments(channel):
-    # get id
-    id = DiscordUtility.get_applicant_id_from_channel_name(channel.name)
-
+async def archive_comments(id, channel):
     # archive channel messages into compressed string
     archived_messages = ""
     current_author = None
@@ -129,17 +123,23 @@ async def archive_comments(channel):
                    content_type='application/octet-stream')
 
 
-async def create_text_channel(guild, channel_name):
-    # get guild and category
-    category_id = int(os.getenv("RECRUIT_CATEGORY_ID"))
-    category = discord.utils.get(guild.categories, id=category_id)
-
-    # create and return channel
-    print("epic")
-    channel = await guild.create_text_channel(name=channel_name, category=category)
-    return channel
-
-
-def get_archive_channel_name(applicant):
+async def generate_archive_text_channel(id, guild):
+    # build applicant and channel name
+    applicant = Applicant.build_applicant_from_id(id)
     team_name = "wb" if applicant.team_choice == "Windbridge" else "cc"
-    return f"archive-{applicant.id}-{team_name}"
+    channel_name = f"archive-{applicant.id}-{team_name}"
+
+    # create text channel
+    category = DiscordUtility.get_category_by_id(
+        guild, int(os.getenv("RECRUIT_CATEGORY_ID")))
+    return DiscordUtility.create_text_channel(guild, channel_name, category)
+
+
+async def post_archived_messages(applicant, channel):
+    if applicant.archived_comments:
+        messages = applicant.decode_archived_comments()
+        messages_split = [messages[i:i+1000]
+                          for i in range(0, len(messages), 1000)]
+        for message in messages_split:
+            await channel.send(message, suppress_embeds=True)
+            await asyncio.sleep(2)

@@ -1,9 +1,9 @@
 import os
 import re
-import asyncio
 from discord.ext import commands
-import requests
 from modules.services import applicant_service
+from modules.dataclasses.applicant import Applicant
+from modules.utility.discord_utility import DiscordUtility
 
 
 class ApplicantCog(commands.Cog, name="Applicant"):
@@ -18,8 +18,9 @@ class ApplicantCog(commands.Cog, name="Applicant"):
             return
 
         # post applicant embed
-        embed, applicant = applicant_service.build_applicant_embed(
+        id = DiscordUtility.get_applicant_id_from_recruit_channel_name(
             channel.name)
+        embed, applicant = applicant_service.get_applicant_and_embed(id)
         message = await channel.send(embed=embed)
 
         # pin and add reactions
@@ -37,7 +38,9 @@ class ApplicantCog(commands.Cog, name="Applicant"):
     async def end(self, ctx: commands.Context):
         """Deletes and logs an applicant text channel"""
         if re.match('.{2}-.+-\d+', ctx.channel.name):
-            await applicant_service.archive_comments(ctx.channel)
+            id = DiscordUtility.get_applicant_id_from_recruit_channel_name(
+                ctx.channel.name)
+            await applicant_service.archive_comments(id, ctx.channel)
             await ctx.channel.delete()
 
     @commands.command("app")
@@ -46,23 +49,15 @@ class ApplicantCog(commands.Cog, name="Applicant"):
         if ctx.channel.category_id != int(os.getenv("RECRUIT_CATEGORY_ID")):
             return
 
-        # get applicant
-        applicant = applicant_service.build_applicant_from_id(id)
-
         # create archive channel
-        channel_name = applicant_service.get_archive_channel_name(applicant)
-        new_channel = await applicant_service.create_text_channel(ctx.guild, channel_name)
+        new_channel = await applicant_service.generate_archive_text_channel(id, ctx.guild)
 
-        # post application and messaages
-        embed = applicant_service.build_applicant_embed(applicant)
+        # get applicant and post old app
+        embed, applicant = applicant_service.get_applicant_and_embed(id)
         await new_channel.send(embed=embed)
-        if applicant.archived_comments:
-            messages = applicant.decode_archived_comments()
-            messages_split = [messages[i:i+1000]
-                              for i in range(0, len(messages), 1000)]
-            for message in messages_split:
-                await new_channel.send(message, suppress_embeds=True)
-                await asyncio.sleep(2)
+
+        # post archived messages
+        applicant_service.post_archived_messages(applicant, new_channel)
 
 
 async def setup(bot: commands.Bot):
