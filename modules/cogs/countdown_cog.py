@@ -39,8 +39,7 @@ class CountdownCog(commands.Cog, name="Countdown"):
     async def countdown_template(self, ctx):
         """Creates a asscsacsa embed."""
         embed = discord.Embed(title="**🕒 Tyrhold's Countdown Template**",
-                              description=
-                              """
+                              description="""
                               !mb countdown create title:: [title] --- time:: [time] --- color:: [color] --- image:: [image] --- thumbnail:: [thumbnail]
                               \nConvert your desired time to Unix time [here](https://www.epochconverter.com/). The only required fields are title and time; the rest can be removed.
                               """)

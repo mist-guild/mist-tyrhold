@@ -1,7 +1,7 @@
 import os
 from discord import webhook
 from discord.ext import commands
-from . import utility
+from ..services import recruit_webhook_service
 
 
 class RecruitWebhookCog(commands.Cog, name="Recruit Webhook"):

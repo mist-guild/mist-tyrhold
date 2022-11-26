@@ -3,7 +3,7 @@ import re
 import asyncio
 from discord.ext import commands
 import requests
-from . import utility
+from ..services import applicant_service
 
 
 class ApplicantCog(commands.Cog, name="Applicant"):
@@ -18,9 +18,9 @@ class ApplicantCog(commands.Cog, name="Applicant"):
             return
 
         # post applicant embed
-        id = utility.get_applicant_id(channel.name)
-        applicant = utility.build_applicant_from_id(id)
-        embed = utility.build_applicant_embed(applicant)
+        id = applicant_service.get_applicant_id(channel.name)
+        applicant = applicant_service.build_applicant_from_id(id)
+        embed = applicant_service.build_applicant_embed(applicant)
         message = await channel.send(embed=embed)
 
         # pin and add reactions
@@ -30,7 +30,7 @@ class ApplicantCog(commands.Cog, name="Applicant"):
             await message.add_reaction(emoji)
 
         # check if applicant is already in database
-        previous_apps = utility.check_for_previous_app(applicant)
+        previous_apps = applicant_service.check_for_previous_app(applicant)
         for id in previous_apps:
             await channel.send(f"**Previous Application detected!** Run `!mb app {id}` to view it.")
 
@@ -38,8 +38,8 @@ class ApplicantCog(commands.Cog, name="Applicant"):
     async def end(self, ctx: commands.Context):
         """Deletes an applicant text channel"""
         if re.match('.{2}-.+-\d+', ctx.channel.name):
-            id = utility.get_applicant_id(ctx.channel.name)
-            archived_comments = await utility.get_archive_comments_string(
+            id = applicant_service.get_applicant_id(ctx.channel.name)
+            archived_comments = await applicant_service.get_archive_comments_string(
                 ctx.channel)
             requests.put(os.getenv("APPLICANT_URL") + f"archive/{id}",
                          data=archived_comments,
@@ -53,14 +53,14 @@ class ApplicantCog(commands.Cog, name="Applicant"):
             return
 
         # get applicant
-        applicant = utility.build_applicant_from_id(id)
+        applicant = applicant_service.build_applicant_from_id(id)
 
         # create archive channel
-        channel_name = utility.get_archive_channel_name(applicant)
-        new_channel = await utility.create_text_channel(ctx.guild, channel_name)
+        channel_name = applicant_service.get_archive_channel_name(applicant)
+        new_channel = await applicant_service.create_text_channel(ctx.guild, channel_name)
 
         # post application and messaages
-        embed = utility.build_applicant_embed(applicant)
+        embed = applicant_service.build_applicant_embed(applicant)
         await new_channel.send(embed=embed)
         if applicant.archived_comments:
             messages = applicant.decode_archived_comments()
@@ -76,7 +76,7 @@ class ApplicantCog(commands.Cog, name="Applicant"):
         if ctx.channel.category_id != int(os.getenv("RECRUIT_CATEGORY_ID")):
             return
 
-        embed = utility.get_applicants_embed()
+        embed = applicant_service.get_applicants_embed()
         await ctx.channel.send(embed=embed)
 
 

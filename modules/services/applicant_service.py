@@ -1,7 +1,7 @@
 import os
 import datetime
 import time
-from . import applicant_dto
+from ..apis.dtos import applicant_dto
 import discord
 import requests
 import base64

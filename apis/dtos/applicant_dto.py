@@ -24,9 +24,6 @@ class Applicant:
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
 
-    def to_json(self):
-        return self.wow_class
-
     def decode_archived_comments(self):
         return zlib.decompress(
             base64.b64decode(
