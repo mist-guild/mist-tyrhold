@@ -1,8 +1,5 @@
 import os
-import datetime
-import time
 import discord
-import requests
 import base64
 import zlib
 import json
@@ -21,7 +18,7 @@ def build_applicant_embed(channel_name):
 
     # build embed
     time, date = GeneralUtility.get_time_and_date()
-    color, icon = get_class_color_and_icon(applicant.wow_class)
+    color, icon = GeneralUtility.get_class_color_and_icon(applicant.wow_class)
     embed = discord.Embed(title=f":bookmark_tabs: Application for {applicant.character_name}",
                           description=f"This application was posted at {time} on {date}.", color=color)
 
@@ -96,23 +93,21 @@ def build_applicant_embed(channel_name):
     return embed, applicant
 
 
-def get_category_by_id(guild, category_id):
-    return discord.utils.get(guild.categories, id=category_id)
-
-
-def check_for_previous_app(applicant):
+def get_previous_applications(applicant):
     data = {"discord_contact": applicant.discord_contact,
-            "battlenet_contact": applicant.battlenet_contact}
-    response = requests.get(os.getenv("APPLICANT_URL") + "exists",
-                            headers={'content-type': 'application/json'},
-                            data=json.dumps(data))
+            "battlenet_contact": applicant.battlenet_contact,
+            "called_from": applicant.id}
+
+    response = Valdrakken.get("/applicant/exists/",
+                              content=json.dumps(data))
     return response.json()
 
 
+async def archive_comments(channel):
+    # get id
+    id = DiscordUtility.get_applicant_id_from_channel_name(channel.name)
 
-
-async def get_archive_comments_string(channel):
-    # loop through all msgs and add to archived_messages
+    # archive channel messages into compressed string
     archived_messages = ""
     current_author = None
     async for message in channel.history(oldest_first=True, limit=None):
@@ -124,11 +119,14 @@ async def get_archive_comments_string(channel):
         if current_author != message.author:
             current_author = message.author
             archived_messages += f"\n**{message.author}**\n"
-
         archived_messages += f"{message.content}\n"
+    encoded_messages = base64.b64encode(
+        zlib.compress(archived_messages.encode()))
 
-    # encode, compress, and return string
-    return base64.b64encode(zlib.compress(archived_messages.encode()))
+    # send to valdrakken to append to DB
+    Valdrakken.put(f"/applicant/archive/{id}/",
+                   content=encoded_messages,
+                   content_type='application/octet-stream')
 
 
 async def create_text_channel(guild, channel_name):
@@ -145,51 +143,3 @@ async def create_text_channel(guild, channel_name):
 def get_archive_channel_name(applicant):
     team_name = "wb" if applicant.team_choice == "Windbridge" else "cc"
     return f"archive-{applicant.id}-{team_name}"
-
-
-def get_class_color_and_icon(class_name):
-    class_colors = {
-        "Warrior": 0xC79C6E,
-        "Paladin": 0xF58CBA,
-        "Hunter": 0xABD473,
-        "Rogue": 0xFFF569,
-        "Priest": 0xFFFFFF,
-        "Death Knight": 0xC41F3B,
-        "Shaman": 0x0070DE,
-        "Mage": 0x69CCF0,
-        "Warlock": 0x9482C9,
-        "Monk": 0x00FF96,
-        "Druid": 0xFF7D0A,
-        "Demon Hunter": 0xA330C9,
-        "Evoker": 0x33937F,
-    }
-
-    class_icons = {
-        "Warrior": '<:Warrior:976616539744792616>',
-        "Paladin": '<:Paladin:976616493859078155>',
-        "Hunter": '<:Hunter:976616446752874536>',
-        "Rogue": '<:Rogue:976616482190528582>',
-        "Priest": '<:Priest:976616470391955467>',
-        "Death Knight": '<:DeathKnight:976616412288282634>',
-        "Shaman": '<:Shaman:976616510183313408> ',
-        "Mage": '<:Mage:976616436585881700>',
-        "Warlock": '<:Warlock:976616527526768680>',
-        "Monk": '<:Monk:976616424699215922> ',
-        "Druid": '<:Druid:976616457406390332>',
-        "Demon Hunter": '<:DemonHunter:976616398912618517>',
-        "Evoker": '<:evoker_flat:1034823772290695259>',
-    }
-
-    return class_colors[class_name], class_icons[class_name]
-
-
-def get_applicants_embed():
-    applicants = requests.get(os.getenv("APPLICANT_URL") + "all").json()
-    list = ""
-    for key, value in applicants.items():
-        list += f"{key} - {value}\n"
-    print(list)
-
-    embed = discord.Embed(title=f"All Applicants as of {get_time_and_date()[1]}",
-                          description=list)
-    return embed
