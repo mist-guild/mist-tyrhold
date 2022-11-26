@@ -5,7 +5,7 @@ import zlib
 import json
 import asyncio
 from apis.valdrakken import Valdrakken
-from modules.dataclasses.applicant import Applicant
+from apis.dataclasses.applicant import Applicant
 from modules.utility.general_utility import GeneralUtility
 from modules.utility.discord_utility import DiscordUtility
 

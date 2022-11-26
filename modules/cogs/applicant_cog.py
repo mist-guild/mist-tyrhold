@@ -2,7 +2,6 @@ import os
 import re
 from discord.ext import commands
 from modules.services.applicant_service import ApplicantService
-from modules.dataclasses.applicant import Applicant
 from modules.utility.discord_utility import DiscordUtility
 
 
