@@ -3,31 +3,34 @@ import requests
 
 
 class Valdrakken:
-    def __init__(self):
-        self.url = int(os.getenv("VALDRAKKEN_URL"))
+    url = os.getenv("VALDRAKKEN_URL")
 
-    def get(self, endpoint):
+    @classmethod
+    def get(cls, endpoint):
         if endpoint[0] != '/':
             endpoint = '/' + endpoint
-        return requests.get(self.url + endpoint)
+        return requests.get(cls.url + endpoint)
 
-    def post(self, endpoint, content=None, content_type="application/json"):
+    @classmethod
+    def post(cls, endpoint, content=None, content_type="application/json"):
         if endpoint[0] != '/':
             endpoint = '/' + endpoint
-        return requests.post(self.url + endpoint,
+        return requests.post(cls.url + endpoint,
                              data=content,
                              headers={'Content-Type': content_type})
 
-    def put(self, endpoint, content=None, content_type="application/json"):
+    @classmethod
+    def put(cls, endpoint, content=None, content_type="application/json"):
         if endpoint[0] != '/':
             endpoint = '/' + endpoint
-        return requests.put(self.url + endpoint,
+        return requests.put(cls.url + endpoint,
                             data=content,
                             headers={'Content-Type': content_type})
 
-    def delete(self, endpoint, content=None, content_type="application/json"):
+    @classmethod
+    def delete(cls, endpoint, content=None, content_type="application/json"):
         if endpoint[0] != '/':
             endpoint = '/' + endpoint
-        return requests.delete(self.url + endpoint,
+        return requests.delete(cls.url + endpoint,
                                data=content,
                                headers={'Content-Type': content_type})

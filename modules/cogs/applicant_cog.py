@@ -18,9 +18,7 @@ class ApplicantCog(commands.Cog, name="Applicant"):
             return
 
         # post applicant embed
-        id = applicant_service.get_applicant_id(channel.name)
-        applicant = applicant_service.build_applicant_from_id(id)
-        embed = applicant_service.build_applicant_embed(applicant)
+        embed, applicant = applicant_service.build_applicant_embed(channel.name)
         message = await channel.send(embed=embed)
 
         # pin and add reactions

@@ -12,8 +12,8 @@ client = commands.Bot(command_prefix="!mb ", intents=intents)
 
 
 async def load_extensions():
-    # os.listdir("modules") - dev
-    # os.listdir("/home/mistguild/bot/modules") - prod
+    # os.listdir("modules/cogs") - dev
+    # os.listdir("/home/mistguild/bot/modules/cogs") - prod
     for file in os.listdir("modules/cogs"):
         if file.startswith("__pycache__"):
             continue

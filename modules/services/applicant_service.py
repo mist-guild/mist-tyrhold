@@ -1,40 +1,26 @@
 import os
 import datetime
 import time
-from modules.dataclasses.applicant import Applicant
 import discord
 import requests
 import base64
 import zlib
 import json
+from apis.valdrakken import Valdrakken
+from modules.dataclasses.applicant import Applicant
+from modules.utility.general_utility import GeneralUtility
+from modules.utility.discord_utility import DiscordUtility
 
 
-def get_applicant_id(channel_name):
-    channel_split = channel_name.split("-")
-    return channel_split[len(channel_split) - 1]
+def build_applicant_embed(channel_name):
+    # get ID from channel name
+    id = DiscordUtility.get_applicant_id_from_channel_name(channel_name)
 
+    # build applicant from ID
+    applicant = Applicant.build_applicant_from_id(id)
 
-def get_category_by_id(guild, category_id):
-    return discord.utils.get(guild.categories, id=category_id)
-
-
-def build_applicant_from_id(id):
-    response = requests.get(os.getenv("APPLICANT_URL") + id)
-    applicant = Applicant(response.json())
-    return applicant
-
-
-def check_for_previous_app(applicant):
-    data = {"discord_contact": applicant.discord_contact,
-            "battlenet_contact": applicant.battlenet_contact}
-    response = requests.get(os.getenv("APPLICANT_URL") + "exists",
-                            headers={'content-type': 'application/json'},
-                            data=json.dumps(data))
-    return response.json()
-
-
-def build_applicant_embed(applicant):
-    time, date = get_time_and_date()
+    # build embed
+    time, date = GeneralUtility.get_time_and_date()
     color, icon = get_class_color_and_icon(applicant.wow_class)
     embed = discord.Embed(title=f":bookmark_tabs: Application for {applicant.character_name}",
                           description=f"This application was posted at {time} on {date}.", color=color)
@@ -107,7 +93,22 @@ def build_applicant_embed(applicant):
     # line break
     embed.add_field(name="\u200B", value="\u200B", inline=False)
 
-    return embed
+    return embed, applicant
+
+
+def get_category_by_id(guild, category_id):
+    return discord.utils.get(guild.categories, id=category_id)
+
+
+def check_for_previous_app(applicant):
+    data = {"discord_contact": applicant.discord_contact,
+            "battlenet_contact": applicant.battlenet_contact}
+    response = requests.get(os.getenv("APPLICANT_URL") + "exists",
+                            headers={'content-type': 'application/json'},
+                            data=json.dumps(data))
+    return response.json()
+
+
 
 
 async def get_archive_comments_string(channel):
@@ -128,13 +129,6 @@ async def get_archive_comments_string(channel):
 
     # encode, compress, and return string
     return base64.b64encode(zlib.compress(archived_messages.encode()))
-
-
-def get_time_and_date():
-    todayVar = datetime.date.today()
-    timeVar = time.strftime("%I:%M %p")
-    dateVar = todayVar.strftime("%m/%d/%y")
-    return timeVar, dateVar
 
 
 async def create_text_channel(guild, channel_name):

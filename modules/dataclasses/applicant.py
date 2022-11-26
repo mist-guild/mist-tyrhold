@@ -1,6 +1,7 @@
 import zlib
 import base64
 from dataclasses import dataclass
+from apis.valdrakken import Valdrakken
 
 
 @dataclass
@@ -32,3 +33,9 @@ class Applicant:
                 bytes(self.archived_comments, encoding='utf-8')
             )
         ).decode()
+
+    @staticmethod
+    def build_applicant_from_id(id):
+        response = Valdrakken.get(f"/applicant/{id}")
+        applicant = Applicant(response.json())
+        return applicant
