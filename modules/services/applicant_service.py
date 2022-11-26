@@ -135,7 +135,7 @@ class ApplicantService:
         # create text channel
         category = DiscordUtility.get_category_by_id(
             guild, int(os.getenv("RECRUIT_CATEGORY_ID")))
-        return DiscordUtility.create_text_channel(guild, channel_name, category)
+        return await DiscordUtility.create_text_channel(guild, channel_name, category)
 
     @staticmethod
     async def post_archived_messages(applicant, channel):

@@ -16,7 +16,7 @@ class RecruitWebhookCog(commands.Cog, name="Recruit Webhook"):
 
         if message.author.id == int(os.getenv("RECRUIT_WEBHOOK_ID")):
             embed = message.embeds[0]
-            new_channel = RecruitWebhookService.generate_recruit_text_channel(
+            new_channel = await RecruitWebhookService.generate_recruit_text_channel(
                 message.guild, embed.author.name, embed.title[20:])
             embed.url = new_channel.jump_url
             await message.delete()

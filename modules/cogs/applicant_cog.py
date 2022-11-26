@@ -56,7 +56,7 @@ class ApplicantCog(commands.Cog, name="Applicant"):
         await new_channel.send(embed=embed)
 
         # post archived messages
-        ApplicantService.post_archived_messages(applicant, new_channel)
+        await ApplicantService.post_archived_messages(applicant, new_channel)
 
 
 async def setup(bot: commands.Bot):
