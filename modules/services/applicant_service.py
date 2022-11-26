@@ -1,7 +1,7 @@
 import os
 import datetime
 import time
-from ..apis.dtos import applicant_dto
+from modules.dataclasses.applicant import Applicant
 import discord
 import requests
 import base64
@@ -20,11 +20,11 @@ def get_category_by_id(guild, category_id):
 
 def build_applicant_from_id(id):
     response = requests.get(os.getenv("APPLICANT_URL") + id)
-    applicant = applicant_dto.Applicant(response.json())
+    applicant = Applicant(response.json())
     return applicant
 
 
-def check_for_previous_app(applicant: applicant_dto.Applicant):
+def check_for_previous_app(applicant):
     data = {"discord_contact": applicant.discord_contact,
             "battlenet_contact": applicant.battlenet_contact}
     response = requests.get(os.getenv("APPLICANT_URL") + "exists",
@@ -33,7 +33,7 @@ def check_for_previous_app(applicant: applicant_dto.Applicant):
     return response.json()
 
 
-def build_applicant_embed(applicant: applicant_dto.Applicant):
+def build_applicant_embed(applicant):
     time, date = get_time_and_date()
     color, icon = get_class_color_and_icon(applicant.wow_class)
     embed = discord.Embed(title=f":bookmark_tabs: Application for {applicant.character_name}",

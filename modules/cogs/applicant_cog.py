@@ -3,7 +3,7 @@ import re
 import asyncio
 from discord.ext import commands
 import requests
-from ..services import applicant_service
+from modules.services import applicant_service
 
 
 class ApplicantCog(commands.Cog, name="Applicant"):
