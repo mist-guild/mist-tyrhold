@@ -1,7 +1,6 @@
 import os
-from discord import webhook
 from discord.ext import commands
-from ..services import recruit_webhook_service
+from modules.services.recruit_webhook_service import RecruitWebhookService
 
 
 class RecruitWebhookCog(commands.Cog, name="Recruit Webhook"):
@@ -17,10 +16,9 @@ class RecruitWebhookCog(commands.Cog, name="Recruit Webhook"):
 
         if message.author.id == int(os.getenv("RECRUIT_WEBHOOK_ID")):
             embed = message.embeds[0]
-            channel_name = utility.get_channel_name(
-                embed.author.name, embed.title[20:])
-            channel = await utility.create_text_channel(self.bot, channel_name)
-            embed.url = channel.jump_url
+            new_channel = RecruitWebhookService.generate_recruit_text_channel(
+                message.guild, embed.author.name, embed.title[20:])
+            embed.url = new_channel.jump_url
             await message.delete()
             await message.channel.send(embed=embed)
 

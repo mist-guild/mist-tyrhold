@@ -1,33 +1,25 @@
 import os
-import discord
+from modules.utility.discord_utility import DiscordUtility
 
 
-def get_channel_name(author_string, team_name):
-    # seperate name and id
-    author_split = author_string.split("•")
-    name = author_split[0].strip()
-    name = parse_chracter_name(name)
-    id = author_split[1].strip()
+class RecruitWebhookService:
+    @staticmethod
+    async def generate_recruit_text_channel(guild, author_string, team_name):
+        # get name/id
+        author_split = author_string.split("•")
+        name = author_split[0].strip()
+        name = name.split("-")[0] if "-" in name else name
+        id = author_split[1].strip()
 
-    # abbreviate team
-    team_name = "wb" if team_name == "Windbridge" else "cc"
+        # get team name
+        team_name = "wb" if team_name == "Windbridge" else "cc"
 
-    # return channel name
-    return f"{team_name}-{name}-{id}"
+        # create channel
+        channel_name = f"{team_name}-{name}-{id}"
+        category = DiscordUtility.get_category_by_id(
+            guild, int(os.getenv("RECRUIT_CATEGORY_ID")))
+        new_channel = await DiscordUtility.create_text_channel(
+            guild, channel_name, category)
 
-
-async def create_text_channel(bot, channel_name):
-    # get guild and category
-    guild = bot.get_guild(int(os.getenv("MIST_GUILD_ID")))
-    category_id = int(os.getenv("RECRUIT_CATEGORY_ID"))
-    category = discord.utils.get(guild.categories, id=category_id)
-
-    # create and return channel
-    channel = await guild.create_text_channel(name=channel_name, category=category)
-    return channel
-
-
-def parse_chracter_name(name):
-    if '-' in name:
-        return name.split("-")[0]
-    return name
+        # return channel
+        return new_channel
