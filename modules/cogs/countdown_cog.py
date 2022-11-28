@@ -1,11 +1,10 @@
-import os
 from discord.ext import commands
 import discord
-import shlex
 
 
 class CountdownCog(commands.Cog, name="Countdown"):
-    """Mist Bot's interaction with applicants and the trialing process"""
+    """Tyrhold's countdown timer functionality"""
+    # TODO: add a service to handle the countdowns
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
@@ -37,7 +36,7 @@ class CountdownCog(commands.Cog, name="Countdown"):
 
     @commands.command("countdown-template")
     async def countdown_template(self, ctx):
-        """Creates a asscsacsa embed."""
+        """Displays an embed with a countdown template."""
         embed = discord.Embed(title="**🕒 Tyrhold's Countdown Template**",
                               description="""
                               !mb countdown create title:: [title] --- time:: [time] --- color:: [color] --- image:: [image] --- thumbnail:: [thumbnail]
