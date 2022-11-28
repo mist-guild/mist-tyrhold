@@ -18,5 +18,7 @@ class Reagent:
     @staticmethod
     def build_reagent_from_character_name(character_name):
         response = Valdrakken.get(f"/reagent/{character_name}")
+        if response.status_code == 404:
+            return None
         reagent = Reagent(response.json())
         return reagent
