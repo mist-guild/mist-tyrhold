@@ -6,7 +6,7 @@ from modules.utility.discord_utility import DiscordUtility
 
 
 class ApplicantCog(commands.Cog, name="Applicant"):
-    """Mist Bot's interaction with applicants and the trialing process"""
+    """Tyrhold's interaction with applicants and the trialing process"""
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
