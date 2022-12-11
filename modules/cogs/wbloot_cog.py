@@ -1,7 +1,9 @@
 import asyncio
 import random
 import discord
+import discord.utils
 from discord.ext import commands
+
 
 class WindbridgeCog(commands.Cog, name="Windbridge"):
     """Mist Bot's windbridge specific commands"""
@@ -25,31 +27,34 @@ class WindbridgeCog(commands.Cog, name="Windbridge"):
                 if role.name == 'Windbridge Officer':
                     roster.remove(user)
 
+        # Remove previous members
+        for user in self.lc_ineligible:
+            roster.remove(user)
+
+        # Build the message
+        message = "Choosing loot council raider.\n"
+        message += 'Previous Raiders:\n'
+        for r in self.lc_ineligible:
+            message += '\t' + r.display_name + '\n'
+
         # Get the Random Person this week
         raider = random.choice(roster)
+        message += "\nThis week's choice: "
+        message += raider.display_name
 
         # Move them to the ineligible list
         roster.remove(raider)
         self.lc_ineligible.append(raider)
 
-        # Build the message
-        message += 'Eligible Raiders:\n'
-        for e in roster:
-            message += e.nick + '\n'
-        message += '\n\nIneligble Raiders:\n'
-        for i in self.lc_ineligible:
-            message += i.nick + '\n'
-
-        message += "This week's choice: " + raider.nick
-
         # Send the message
-        ctx.channel.send("```" + message + "```")
+        await ctx.channel.send("Choosing loot council raider:\n```" + message + "```")
 
 
     @commands.command("lc_reset")
     async def reset_loot_council(self, ctx: commands.Context):
         '''Resets the roster for loot council, clearing the ineligible list.'''
         self.lc_ineligible = []
+        await ctx.channel.send("Reset loot council list to empty.")
 
 async def setup(bot: commands.Bot):
     await bot.add_cog(WindbridgeCog(bot))
