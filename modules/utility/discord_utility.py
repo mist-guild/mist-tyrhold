@@ -21,3 +21,11 @@ class DiscordUtility:
     async def create_text_channel(guild, channel_name, category):
         channel = await guild.create_text_channel(name=channel_name, category=category)
         return channel
+
+    @staticmethod
+    async def get_role_by_id(guild, role_id):
+        return discord.utils.get(guild.roles, id=role_id)
+
+    @staticmethod
+    async def get_users_by_role(guild, role_id):
+        return get_role_by_id(guild, role_id).members
