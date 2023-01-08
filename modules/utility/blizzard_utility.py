@@ -1,5 +1,6 @@
 from blizzardapi import BlizzardApi
 import os
+import json
 
 # DK, DH, Lock
 DREADFUL_HELM = '196590'
@@ -131,6 +132,8 @@ class BlizzardUtility:
             '-44': 'Trash',
         }
         self.item_list = {}
+        if os.path.exists('blizz_cache.json'):
+            self.load_cache()
 
 
     def get_boss(self, id):
@@ -140,6 +143,7 @@ class BlizzardUtility:
         if id not in self.boss_list:
             boss = self.api_client.wow.game_data.get_journal_encounter('us', 'en_US', id)
             self.boss_list[id] = boss['name']
+            self.save_cache()
         return self.boss_list[id]
 
 
@@ -152,4 +156,22 @@ class BlizzardUtility:
         if id not in self.item_list:
             item = self.api_client.wow.game_data.get_item('us', 'en_US', id)
             self.item_list[id] = item['name']
+            self.save_cache()
         return self.item_list[id]
+
+
+    def save_cache(self):
+        cache = {
+            'boss': self.boss_list,
+            'item': self.item_list
+        }
+        with open('blizz_cache.json','w') as f:
+            f.write(json.dumps(cache))
+
+
+    def load_cache(self):
+        cache = None
+        with open('blizz_cache.json', 'r') as f:
+            cache = json.loads(f.read())
+        self.boss_list = cache['boss']
+        self.item_list = cache['item']
