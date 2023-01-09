@@ -42,9 +42,9 @@ class DroptimizerCog(commands.Cog, name="Droptimizer"):
         mythic_summary = self.raidbots.get_boss_summary(mythic_data)
         heroic_summary = self.raidbots.get_boss_summary(heroic_data)
         normal_summary = self.raidbots.get_boss_summary(normal_data)
-        self.sheets_util.write_data_to_worksheet('Summary', mythic_data, row=3, col=2)
-        self.sheets_util.write_data_to_worksheet('Summary', mythic_data, row=3, col=5)
-        self.sheets_util.write_data_to_worksheet('Summary', mythic_data, row=3, col=8)
+        self.sheets_util.write_data_to_worksheet('Summary', mythic_summary, row=3, col=2)
+        self.sheets_util.write_data_to_worksheet('Summary', mythic_summary, row=3, col=5)
+        self.sheets_util.write_data_to_worksheet('Summary', mythic_summary, row=3, col=8)
 
 
 async def setup(bot: commands.Bot):
