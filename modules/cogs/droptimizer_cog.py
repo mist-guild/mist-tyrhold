@@ -2,6 +2,7 @@ import pandas as pd
 import gspread_dataframe as gd
 import gspread as gs
 import os
+import pandas
 from modules.utility.blizzard_utility import BlizzardUtility
 from modules.utility.raidbots_utility import RaidbotsUtility
 from modules.utility.gsheets_utility import GoogleSheetsUtility
@@ -17,8 +18,8 @@ class DroptimizerCog(commands.Cog, name="Droptimizer"):
         self.sheets_util = GoogleSheetsUtility(os.getenv('SPREADSHEET_NAME'))
 
     
-    @commands.command('droptimizer')
-    async def run_droptimizer_parsing(self, ctx: commands.Context):
+    @commands.command()
+    async def droptimizer(self, ctx: commands.Context):
         await ctx.channel.send('Beginning parsing.')
 
         # Get the list of reports from the spreadsheet
@@ -35,9 +36,9 @@ class DroptimizerCog(commands.Cog, name="Droptimizer"):
         await ctx.channel.send('Parsed raw data.')
 
         # Write raw data to the Google Sheet
-        self.sheets_util.write_data_to_worksheet('Mythic', mythic_data, include_index=True, include_column_header=True)
-        self.sheets_util.write_data_to_worksheet('Heroic', heroic_data, include_index=True, include_column_header=True)
-        self.sheets_util.write_data_to_worksheet('Normal', normal_data, include_index=True, include_column_header=True)
+        self.sheets_util.write_data_to_worksheet('Mythic', pandas.DataFrame(data=mythic_data), include_index=True, include_column_header=True)
+        self.sheets_util.write_data_to_worksheet('Heroic', pandas.DataFrame(data=heroic_data), include_index=True, include_column_header=True)
+        self.sheets_util.write_data_to_worksheet('Normal', pandas.DataFrame(data=normal_data), include_index=True, include_column_header=True)
         await ctx.channel.send('Wrote raw data to spreadsheet.')
 
         # Get boss summaries
@@ -47,9 +48,9 @@ class DroptimizerCog(commands.Cog, name="Droptimizer"):
         await ctx.channel.send('Generated boss summaries.')
 
         # Write Summary Data
-        self.sheets_util.write_data_to_worksheet('Summary', mythic_summary, row=3, col=2)
-        self.sheets_util.write_data_to_worksheet('Summary', heroic_summary, row=3, col=5)
-        self.sheets_util.write_data_to_worksheet('Summary', normal_summary, row=3, col=8)
+        self.sheets_util.write_data_to_worksheet('Summary', pandas.DataFrame(data=mythic_summary).transpose().sort_index(), row=3, col=1, include_index=True, resize=False)
+        self.sheets_util.write_data_to_worksheet('Summary', pandas.DataFrame(data=heroic_summary).transpose().sort_index(), row=3, col=5, resize=False)
+        self.sheets_util.write_data_to_worksheet('Summary', pandas.DataFrame(data=normal_summary).transpose().sort_index(), row=3, col=8, resize=False)
         await ctx.channel.send('Wrote boss summaries to spreadsheet.')
 
 

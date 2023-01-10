@@ -14,8 +14,11 @@ class GoogleSheetsUtility:
         return self.spreadsheet.worksheet(name)
 
     
-    def write_data_to_worksheet(self, worksheet_name, data, row=0, col=0, include_index=False, include_column_header=False, resize=True):
-        dataframe = pandas.DataFrame(data=data)
-        gs_df.set_with_dataframe(worksheet=self.get_worksheet(worksheet_name), dataframe=dataframe, row=row, col=col,
-            include_index=include_index, include_column_header=include_column_header, resize=resize)
+    def write_data_to_worksheet(self, worksheet_name, data, row=1, col=1, include_index=False, include_column_header=False, resize=True):
+        #dataframe = pandas.DataFrame(data=data)
+        try:
+            gs_df.set_with_dataframe(worksheet=self.get_worksheet(worksheet_name), dataframe=data, row=row, col=col,
+                include_index=include_index, include_column_header=include_column_header, resize=resize)
+        except Exception as e:
+            print(e)
 

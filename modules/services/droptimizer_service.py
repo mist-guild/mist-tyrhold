@@ -14,7 +14,6 @@ class DroptimizerService:
         Parses the data in a raidbots data.csv to find the % increase for each sim reported
         '''
         player = data[1][0]
-        print('Parsing report for player ' + player + '.')
 
         report_data = {}
 
