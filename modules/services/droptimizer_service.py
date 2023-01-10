@@ -1,20 +1,12 @@
-import requests
-import csv
+from modules.utility.blizzard_utility import BlizzardUtility
+from modules.utility.gsheets_utility import GoogleSheetsUtility
+from modules.utility.raidbots_utility import RaidbotsUtility
 
-class RaidbotsUtility:
+class DroptimizerService:
 
-    def get_report_csv(self, report_link):
-        '''
-        Downloads the Report Data from Raidbots using the Simple CSV data endpoint.
-        '''
-        report_link = report_link + '/data.csv'
-        raw_data = None
-        with requests.Session() as s:
-            raw_data = s.get(report_link)
-        decoded_content = raw_data.content.decode('utf-8')
-        csv_data = csv.reader(decoded_content.splitlines(), delimiter=',')
-        data_list = list(csv_data)
-        return data_list
+    def __init__(self):
+        self.blizz_util = BlizzardUtility()
+        self.raidbots_util = RaidbotsUtility()
 
 
     def parse_report(self, data):
@@ -35,7 +27,7 @@ class RaidbotsUtility:
 
             # Get the Item Name
             sim_name_list = sim[0].split('/')
-            item_name = self.blizz_api.get_boss(sim_name_list[1]) + ' - ' + self.blizz_api.get_item(sim_name_list[3])
+            item_name = self.blizz_util.get_boss(sim_name_list[1]) + ' - ' + self.blizz_util.get_item(sim_name_list[3])
 
             # Add to data dictionary, choosing the highest sim if the item appears multiple times
             if item_name in report_data:
@@ -51,7 +43,7 @@ class RaidbotsUtility:
         if len(report_list) > 0:
             for report_link in report_list:
                 # Download report data
-                report_data = self.get_report_csv(report_link)
+                report_data = self.raidbots_util.get_report_csv(report_link)
                 player, data = self.parse_report(report_data)
                 mythic_data[player] = data
         return mythic_data
