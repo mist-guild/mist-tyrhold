@@ -22,7 +22,7 @@ class DroptimizerCog(commands.Cog, name="Droptimizer"):
     
     @commands.command(name="droptimizer_run")
     async def run_droptimizer_reports(self, ctx: commands.Context):
-
+        '''Parses all input Droptimizer Links.'''
         # Get the list of reports from the spreadsheet
         links_sheet = self.sheets_util.get_worksheet('Links')
         mythic_reports_list = [x for x in links_sheet.col_values(2)[1:] if x]
@@ -53,6 +53,9 @@ class DroptimizerCog(commands.Cog, name="Droptimizer"):
 
     @commands.command('droptimizer_boss')
     async def get_droptimizer_boss_list(self, ctx: commands.Context, difficulty: str, boss_name: str):
+        '''
+        Gets a list of Players and their highest upgrades for the input boss.
+        '''
         # Check parameters for validity
         if difficulty not in ['Mythic', 'Heroic', 'Normal']:
             await ctx.channel.send('Invalid difficulty. Valid options: Mythic, Heroic, Normal')
@@ -67,10 +70,11 @@ class DroptimizerCog(commands.Cog, name="Droptimizer"):
             dataframe = gd.get_as_dataframe(worksheet=worksheet).set_index('Boss')
             dataframe = dataframe.filter(like=boss_name, axis=0)
             max_values = dataframe.max(axis=0).sort_values(ascending=False)
-            df = pandas.DataFrame(max_values)
-
-            # Create an Embed with the info
-            await ctx.send('```'+ difficulty + ' ' + boss_name + '\n' + tabulate(df, headers='keys', tablefmt='psql')+'```')
+            max_val = pandas.DataFrame(max_values)
+            max_item = pandas.DataFrame(dataframe.idxmax())
+            concat = pandas.concat([max_val, max_item], axis=1)
+            
+            await ctx.send('```'+ difficulty + ' ' + boss_name + '\n' + tabulate(concat, headers='keys', tablefmt='psql')+'```')
         except Exception as e:
             print(e)
         
