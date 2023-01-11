@@ -33,6 +33,11 @@ class DroptimizerCog(commands.Cog, name="Droptimizer"):
         self.sheets_util.write_data_to_worksheet('Heroic', pandas.DataFrame(data=heroic_data), include_index=True, include_column_header=True)
         self.sheets_util.write_data_to_worksheet('Normal', pandas.DataFrame(data=normal_data), include_index=True, include_column_header=True)
 
+        # Add 'Boss' to Cell A1
+        self.sheets_util.get_worksheet('Mythic').update('A1', 'Boss')
+        self.sheets_util.get_worksheet('Heroic').update('A1', 'Boss')
+        self.sheets_util.get_worksheet('Normal').update('A1', 'Boss')
+
         # Get boss summaries
         mythic_summary = self.droptimizer_service.get_boss_summary(mythic_data)
         heroic_summary = self.droptimizer_service.get_boss_summary(heroic_data)
