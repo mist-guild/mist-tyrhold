@@ -1,8 +1,6 @@
 import gspread_dataframe as gd
 import os
 import pandas
-from modules.utility.blizzard_utility import BlizzardUtility
-from modules.utility.raidbots_utility import RaidbotsUtility
 from modules.utility.gsheets_utility import GoogleSheetsUtility
 from modules.services.droptimizer_service import DroptimizerService
 from discord.ext import commands
