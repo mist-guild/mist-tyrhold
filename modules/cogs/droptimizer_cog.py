@@ -52,50 +52,8 @@ class DroptimizerCog(commands.Cog, name="Droptimizer"):
         await ctx.channel.send('```Droptimizer run completed.```')
 
 
-    @commands.command('droptimizer_boss')
-    async def get_droptimizer_boss_list(self, ctx: commands.Context, difficulty: str, boss_name: str):
-        '''
-        Gets a list of Players and their highest upgrades for the input boss.
-        '''
-        # Check parameters for validity
-        if difficulty not in ['Mythic', 'Heroic', 'Normal']:
-            await ctx.channel.send('Invalid difficulty. Valid options: Mythic, Heroic, Normal')
-            return
-        if boss_name not in ['Eranog', 'Terros', 'Sennarth', 'Kurog', 'Council', 'Dathea', 'Broodkeeper', 'Raszageth']:
-            await ctx.channel.send('Invalid Boss. Valid options: Eranog, Terros, Sennarth, Kurog, Council, Dathea, Broodkeeper, Raszageth')
-            return
-
-        try:
-            # Get full data for the difficulty
-            worksheet = self.sheets_util.get_worksheet(difficulty)
-            dataframe = gd.get_as_dataframe(worksheet=worksheet).set_index('Boss')
-            dataframe = dataframe.filter(like=boss_name, axis=0)
-            max_values = dataframe.max(axis=0).sort_values(ascending=False)
-            max_val = pandas.DataFrame(max_values)
-            max_item = pandas.DataFrame(dataframe.idxmax())
-            concat = pandas.concat([max_val, max_item], axis=1)
-            
-            response_list = []
-            for index, row in concat.iterrows():
-                row_list = [x for x in row.values]
-                name = index
-                value = '{:>,.0f}'.format(row_list[0])
-                item = row_list[1].split(' - ')[1]
-                response_list.append('{0:15} | {1:5} | {2}\n'.format(name, value, item))
-
-            response = ''
-            for resp in response_list:
-                response += resp
-                if len(response) > 1800:
-                    await ctx.channel.send('```' + response + '```')
-                    response = ''
-            await ctx.channel.send('```' + response + '```')
-            
-        except Exception as e:
-            print(e)
-
-    @commands.command('droptimizer_item')
-    async def get_droptimizer_boss_list(self, ctx: commands.Context, difficulty: str, item_name: str):
+    @commands.command('droptimizer_search')
+    async def get_droptimizer_boss_list(self, ctx: commands.Context, difficulty: str, search_name: str):
         '''
         Gets a list of Players and their highest upgrades for the input boss.
         '''
@@ -108,7 +66,7 @@ class DroptimizerCog(commands.Cog, name="Droptimizer"):
             # Get full data for the difficulty
             worksheet = self.sheets_util.get_worksheet(difficulty)
             dataframe = gd.get_as_dataframe(worksheet=worksheet).set_index('Boss')
-            dataframe = dataframe.filter(like=item_name, axis=0).fillna(0)
+            dataframe = dataframe.filter(like=search_name, axis=0).fillna(0)
             max_values = dataframe.max(axis=0).sort_values(ascending=False)
             max_val = pandas.DataFrame(max_values)
             max_item = pandas.DataFrame(dataframe.idxmax())
