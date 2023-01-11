@@ -113,7 +113,6 @@ class DroptimizerCog(commands.Cog, name="Droptimizer"):
             max_val = pandas.DataFrame(max_values)
             max_item = pandas.DataFrame(dataframe.idxmax())
             concat = pandas.concat([max_val, max_item], axis=1)
-            print(concat)
             
             response_list = []
             for index, row in concat.iterrows():
