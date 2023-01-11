@@ -1,11 +1,6 @@
-import pandas as pd
 import gspread_dataframe as gd
-import gspread as gs
 import os
 import pandas
-import discord
-import json
-from tabulate import tabulate
 from modules.utility.blizzard_utility import BlizzardUtility
 from modules.utility.raidbots_utility import RaidbotsUtility
 from modules.utility.gsheets_utility import GoogleSheetsUtility
