@@ -76,7 +76,7 @@ class DroptimizerCog(commands.Cog, name="Droptimizer"):
                 name = index
                 value = '{:>,.0f}'.format(row_list[0])
                 item = row_list[1].split(' - ')[1]
-                response_list.append('{0:15} | {1:5} | {2}\n'.format(name, value, item))
+                response_list.append('{0:15} | {1:>5} | {2}\n'.format(name, value, item))
 
             response = ''
             for resp in response_list:
