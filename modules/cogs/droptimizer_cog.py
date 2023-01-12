@@ -4,7 +4,7 @@ import pandas
 from modules.utility.gsheets_utility import GoogleSheetsUtility
 from modules.services.droptimizer_service import DroptimizerService
 from discord.ext import commands
-
+import logging
 
 class DroptimizerCog(commands.Cog, name="Droptimizer"):
 
@@ -51,7 +51,7 @@ class DroptimizerCog(commands.Cog, name="Droptimizer"):
 
 
     @commands.command('droptimizer_search')
-    async def get_droptimizer_boss_list(self, ctx: commands.Context, difficulty: str, search_name: str):
+    async def search_droptimizer_data(self, ctx: commands.Context, difficulty: str, search_string: str):
         '''
         Gets a list of Players and their highest upgrades for the input boss.
         '''
@@ -64,7 +64,7 @@ class DroptimizerCog(commands.Cog, name="Droptimizer"):
             # Get full data for the difficulty
             worksheet = self.sheets_util.get_worksheet(difficulty)
             dataframe = gd.get_as_dataframe(worksheet=worksheet).set_index('Boss')
-            dataframe = dataframe.filter(like=search_name, axis=0).fillna(0)
+            dataframe = dataframe.filter(like=search_string, axis=0).fillna(0)
             max_values = dataframe.max(axis=0).sort_values(ascending=False)
             max_val = pandas.DataFrame(max_values)
             max_item = pandas.DataFrame(dataframe.idxmax())
@@ -87,7 +87,7 @@ class DroptimizerCog(commands.Cog, name="Droptimizer"):
             await ctx.channel.send('```' + response + '```')
             
         except Exception as e:
-            print(e)
+            logging.error(e)
         
 
 
